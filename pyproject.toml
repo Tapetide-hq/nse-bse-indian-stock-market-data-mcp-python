@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tapetide-mcp"
+version = "1.0.0"
+description = "NSE BSE Indian stock market MCP server for Python — 55 tools for Indian stock market data & research: live NSE/BSE quotes, financials, technicals, 326-ratio stock screener, analyst ratings, FII/DII flows, option chains & IV, parsed filings, IPOs, portfolio tracking. Works with Claude, ChatGPT, Cursor, Codex & any MCP client."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Tapetide", email = "hello@tapetide.com" }]
+dependencies = []
+keywords = [
+  "mcp", "mcp-server", "model-context-protocol", "nse-mcp", "bse-mcp",
+  "indian-stock-market-mcp", "stock-market-mcp", "nifty-mcp",
+  "indian-stock-market", "stock-market-data", "stock-research", "stock-screener",
+  "nse", "bse", "nifty", "sensex", "fii-dii", "option-chain", "technical-analysis",
+  "fundamental-analysis", "financial-data", "market-data", "llm", "ai-agent",
+  "claude", "chatgpt", "cursor", "tapetide",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Financial and Insurance Industry",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Office/Business :: Financial :: Investment",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.urls]
+Homepage = "https://tapetide.com/mcp"
+Documentation = "https://tapetide.com/mcp"
+Repository = "https://github.com/Tapetide-hq/nse-bse-indian-stock-market-data-mcp-python"
+Issues = "https://github.com/Tapetide-hq/nse-bse-indian-stock-market-data-mcp-python/issues"
+"npm package" = "https://www.npmjs.com/package/tapetide-mcp"
+
+[project.scripts]
+tapetide-mcp = "tapetide_mcp.__main__:main"
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "README.md", "LICENSE"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tapetide_mcp"]
