@@ -4,23 +4,24 @@
   </a>
 </p>
 
-<h1 align="center">NSE & BSE Indian Stock Market Data MCP Server — Python</h1>
+<h1 align="center">Indian Stock Market MCP Server for Python — NSE & BSE Data via uvx</h1>
 
 <p align="center">
-  <strong>The official Python package for the Tapetide MCP server — 55 tools to search, screen & analyze all 8,200+ NSE and BSE stocks from Claude, ChatGPT, Cursor & any AI assistant. Install with <code>uvx</code> or <code>pip</code>.</strong>
+  <strong>The official Python package of the Tapetide Indian stock market MCP server: 55 tools to search, screen and analyze all 8,200+ NSE and BSE stocks from Claude, ChatGPT, Cursor, VS Code, Codex, Gemini CLI and any MCP client. Install with <code>uvx</code> or <code>pip</code>.</strong>
 </p>
 
 <p align="center">
   <a href="https://pypi.org/project/tapetide-mcp/"><img src="https://img.shields.io/pypi/v/tapetide-mcp" alt="PyPI version" /></a>
   <a href="https://pypi.org/project/tapetide-mcp/"><img src="https://img.shields.io/pypi/pyversions/tapetide-mcp" alt="Python versions" /></a>
   <a href="https://www.npmjs.com/package/tapetide-mcp"><img src="https://img.shields.io/npm/v/tapetide-mcp?label=npm" alt="npm version" /></a>
+  <a href="https://registry.modelcontextprotocol.io/v0/servers?search=com.tapetide/stock-research-mcp"><img src="https://img.shields.io/badge/MCP%20Registry-com.tapetide%2Fstock--research--mcp-blue" alt="Official MCP Registry" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License" /></a>
-  <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-compatible-blue" alt="MCP compatible" /></a>
 </p>
 
 <p align="center">
   <a href="https://tapetide.com/mcp">Documentation</a> •
   <a href="#quick-start">Quick Start</a> •
+  <a href="#works-with">Client Setup Guides</a> •
   <a href="#tools">55 Tools</a> •
   <a href="#example-prompts">Example Prompts</a> •
   <a href="https://pypi.org/project/tapetide-mcp/">PyPI</a> •
@@ -31,15 +32,33 @@
 
 ---
 
-## What is this?
-
-`tapetide-mcp` is a [Model Context Protocol](https://modelcontextprotocol.io/) server that connects AI assistants to real-time Indian stock market data. It covers all ~8,200 stocks listed on NSE and BSE — from large-cap Nifty 50 to SME stocks.
-
-Ask your AI to look up any stock, run a screener with 326 fundamental filters or real-time technical indicators, pull quarterly financials, check analyst consensus ratings, track your portfolio P&L, monitor FII/DII institutional flows, or get today's bulk deals — all through natural language.
+`tapetide-mcp` is an **Indian stock market MCP server** for Python that gives AI assistants live, structured data on every **NSE** and **BSE** listed company, from Nifty 50 and Sensex heavyweights to SME stocks. Connect it to **Claude**, **ChatGPT**, **Cursor**, **VS Code**, **Codex** or **Gemini CLI** and ask in plain English for share prices, quarterly financials, a 326-ratio stock screener, technical indicators, FII/DII flows, option chains and IV, corporate filings, IPOs, bulk deals and your portfolio P&L.
 
 This is the Python distribution, for setups that already run Python or `uv` and would rather not install Node.js. It is functionally identical to the [npm package](https://www.npmjs.com/package/tapetide-mcp) ([source](https://github.com/Tapetide-hq/nse-bse-indian-stock-market-data-mcp)) and has **zero runtime dependencies** — standard library only.
 
-**Compatible with:** Claude Desktop, Claude Code, ChatGPT, Cursor, Windsurf, Kiro, VS Code, Codex, Zed, Gemini CLI, OpenCode, Antigravity, and any MCP-compatible client.
+**One-line install** (Claude Code, with a free token from [tapetide.com/settings/tokens](https://tapetide.com/settings/tokens)):
+
+```bash
+claude mcp add tapetide -e TAPETIDE_TOKEN=your_token_here -- uvx tapetide-mcp
+```
+
+**55 tools** · **8,200+ NSE/BSE stocks** · **Python 3.10+, zero dependencies** · **Free tier** · [Setup guides for 16 clients](https://tapetide.com/mcp)
+
+## Works with
+
+Step-by-step setup guides for every major MCP client:
+
+| Chat apps | Code editors & IDEs | Terminal agents |
+|---|---|---|
+| [Claude.ai](https://tapetide.com/mcp/claude-ai) | [Cursor](https://tapetide.com/mcp/cursor) | [Claude Code](https://tapetide.com/mcp/claude-code) |
+| [ChatGPT](https://tapetide.com/mcp/chatgpt) | [VS Code (GitHub Copilot)](https://tapetide.com/mcp/vscode) | [Codex CLI](https://tapetide.com/mcp/codex) |
+| [Claude Desktop](https://tapetide.com/mcp/claude-desktop) | [Windsurf](https://tapetide.com/mcp/windsurf) | [Gemini CLI](https://tapetide.com/mcp/gemini-cli) |
+| [Grok](https://tapetide.com/mcp/grok) | [Kiro](https://tapetide.com/mcp/kiro) | [OpenCode](https://tapetide.com/mcp/opencode) |
+| | [Zed](https://tapetide.com/mcp/zed) | [Command Code](https://tapetide.com/mcp/commandcode) |
+| | [Cline](https://tapetide.com/mcp/cline) | |
+| | [Antigravity](https://tapetide.com/mcp/antigravity) | |
+
+Any other client that speaks the Model Context Protocol works too, over remote HTTP or local stdio.
 
 ## Quick Start
 
