@@ -16,7 +16,18 @@ import urllib.request
 from typing import Any
 
 from . import __version__
-from .auth import TokenManager
+from .auth import AuthError, TokenManager
+
+TOKEN_HELP = "Get a free token at https://tapetide.com/settings/tokens and set it as TAPETIDE_TOKEN."
+
+# Methods the remote serves without a token. Exact names, never a prefix, so
+# nothing added later inherits anonymous access by accident.
+PUBLIC_METHODS = frozenset({"tools/list", "ping", "resources/list", "resources/read"})
+SUPPORTED_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+
+
+def is_public_method(method: object) -> bool:
+    return isinstance(method, str) and (method in PUBLIC_METHODS or method.startswith("notifications/"))
 
 _HEADER_TOKEN = re.compile(r"[^A-Za-z0-9._-]")
 _SESSION_ID = re.compile(r"[^A-Za-z0-9._~+/=-]")
@@ -51,14 +62,31 @@ def jsonrpc_error(msg_id: Any, message: str) -> str:
 
 
 class RemoteClient:
-    def __init__(self, base_url: str, refresh_token: str, timeout: float = 30.0, debug: bool = False):
+    def __init__(self, base_url: str, refresh_token: str | None, timeout: float = 30.0, debug: bool = False):
         self._url = f"{base_url}/mcp"
         self._timeout = timeout
         self._debug = debug
         self.client: str | None = None
         self.protocol_version: str | None = None
         self.session_id: str | None = None
-        self.tokens = TokenManager(base_url, refresh_token, self.user_agent, timeout)
+        self.tokens = TokenManager(base_url, refresh_token, self.user_agent, timeout) if refresh_token else None
+        # Why authentication is unavailable, or None when it works. Without a working
+        # token the bridge runs in DISCOVERY MODE instead of exiting: registries,
+        # inspectors and users who haven't pasted a token yet still get
+        # `initialize` + `tools/list`, which the remote serves anonymously.
+        self.auth_unavailable: str | None = None
+
+    def try_access_token(self) -> str | None:
+        if self.tokens is None:
+            self.auth_unavailable = f"TAPETIDE_TOKEN is not set. {TOKEN_HELP}"
+            return None
+        try:
+            token = self.tokens.get()
+        except AuthError as e:
+            self.auth_unavailable = f"{e}. Check your TAPETIDE_TOKEN. {TOKEN_HELP}"
+            return None
+        self.auth_unavailable = None
+        return token
 
     def user_agent(self) -> str:
         own = f"tapetide-mcp-python/{__version__}"
@@ -74,10 +102,17 @@ class RemoteClient:
             self._capture_client_info(msg)
             self.session_id = None
 
-        status, headers, text = self._post(body)
-        if status == 401:
+        token = self.try_access_token()
+        if token is None:
+            if method == "initialize":
+                return self._local_initialize(msg)
+            if not is_public_method(method):
+                raise AuthError(self.auth_unavailable or TOKEN_HELP)
+
+        status, headers, text = self._post(body, token)
+        if status == 401 and self.tokens is not None and token is not None:
             self.tokens.invalidate()
-            status, headers, text = self._post(body)
+            status, headers, text = self._post(body, self.tokens.get())
 
         self._warn_on_rate_limit(headers)
         if method == "initialize":
@@ -96,13 +131,31 @@ class RemoteClient:
             return jsonrpc_error(msg_id, self._error_message(status, text))
         return text
 
-    def _post(self, body: str) -> tuple[int, Any, str]:
+    def _local_initialize(self, msg: dict) -> str:
+        """Answer `initialize` in discovery mode — the remote requires a token for it."""
+        requested = (msg.get("params") or {}).get("protocolVersion")
+        version = requested if requested in SUPPORTED_PROTOCOL_VERSIONS else "2025-06-18"
+        self.protocol_version = version
+        return json.dumps({
+            "jsonrpc": "2.0",
+            "id": msg.get("id"),
+            "result": {
+                "protocolVersion": version,
+                "capabilities": {"tools": {"listChanged": True}, "resources": {"listChanged": True}},
+                "serverInfo": {"name": "tapetide", "version": __version__},
+                "instructions": "Tapetide is running without authentication: tools can be listed "
+                f"but not called. {self.auth_unavailable}",
+            },
+        })
+
+    def _post(self, body: str, token: str | None) -> tuple[int, Any, str]:
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json, text/event-stream",
             "User-Agent": self.user_agent(),
-            "Authorization": f"Bearer {self.tokens.get()}",
         }
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
         if self.protocol_version:
             headers["MCP-Protocol-Version"] = self.protocol_version
         if self.session_id:

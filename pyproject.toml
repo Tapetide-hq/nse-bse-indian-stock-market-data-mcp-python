@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tapetide-mcp"
-version = "1.0.0"
+version = "1.0.1"
 description = "NSE BSE Indian stock market MCP server for Python — 55 tools for Indian stock market data & research: live NSE/BSE quotes, financials, technicals, 326-ratio stock screener, analyst ratings, FII/DII flows, option chains & IV, parsed filings, IPOs, portfolio tracking. Works with Claude, ChatGPT, Cursor, Codex & any MCP client."
 readme = "README.md"
 license = "MIT"

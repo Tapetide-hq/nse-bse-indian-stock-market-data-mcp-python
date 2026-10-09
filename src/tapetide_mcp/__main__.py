@@ -8,11 +8,8 @@ import signal
 import sys
 
 from . import __version__
-from .auth import AuthError
 from .remote import RemoteClient, jsonrpc_error
 from .stdio import read_messages
-
-TOKEN_URL = "https://tapetide.com/settings/tokens"
 
 
 def _is_notification(msg: object) -> bool:
@@ -33,23 +30,20 @@ def main() -> None:
         print(__version__)
         return
 
-    token = os.environ.get("TAPETIDE_TOKEN")
-    if not token:
-        sys.stderr.write(f"Error: TAPETIDE_TOKEN environment variable is required.\nGet one at {TOKEN_URL}\n")
-        sys.exit(1)
-
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
     remote = RemoteClient(
         os.environ.get("TAPETIDE_MCP_URL", "https://mcp.tapetide.com").rstrip("/"),
-        token,
+        os.environ.get("TAPETIDE_TOKEN") or None,
         debug=os.environ.get("TAPETIDE_DEBUG") == "1",
     )
 
-    try:
-        remote.tokens.get()  # pre-authenticate so the first request is fast
-    except AuthError as e:
-        sys.stderr.write(f"Error: Failed to authenticate. Check your TAPETIDE_TOKEN.\n{e}\n")
-        sys.exit(1)
+    # Pre-authenticate so the first request is fast. Failure is not fatal: the
+    # bridge falls back to discovery mode and retries on every later call.
+    if remote.try_access_token() is None:
+        sys.stderr.write(
+            f"Warning: {remote.auth_unavailable}\n"
+            "Starting in discovery mode: tools can be listed, but tool calls will return this error.\n"
+        )
     sys.stderr.write(f"Tapetide Stock Research MCP (Python) v{__version__} connected. Waiting for requests...\n")
 
     try:
