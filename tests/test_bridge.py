@@ -35,6 +35,8 @@ class FakeRemote(BaseHTTPRequestHandler):
             FakeRemote.token_calls += 1
             return self._send(200, json.dumps({"access_token": f"at{FakeRemote.token_calls}", "expires_in": 3600}))
         FakeRemote.seen.append(self.headers)
+        if "Authorization" not in self.headers and json.loads(raw).get("method") != "tools/list":
+            return self._send(401, '{"error":"authentication_required"}')
         if FakeRemote.reject_next:
             FakeRemote.reject_next = False
             return self._send(401, '{"error":"invalid_token"}')
@@ -114,3 +116,26 @@ def test_reads_content_length_framed_messages():
     assert [m for m, _ in msgs] == ['{"id":1}', '{"id":"é"}']
     msgs[0][1]('{"ok":1}')
     assert stdout.getvalue() == b'Content-Length: 8\r\n\r\n{"ok":1}'
+
+
+@pytest.fixture
+def anonymous(client):
+    return RemoteClient(client._url.removesuffix("/mcp"), None, timeout=5)
+
+
+def test_discovery_mode_answers_initialize_locally(anonymous):
+    reply = json.loads(anonymous.forward(init_msg()))
+    assert reply["result"]["serverInfo"]["name"] == "tapetide"
+    assert "TAPETIDE_TOKEN is not set" in reply["result"]["instructions"]
+    assert FakeRemote.seen == []  # nothing sent upstream
+
+
+def test_discovery_mode_forwards_public_methods_without_auth(anonymous):
+    reply = json.loads(anonymous.forward('{"jsonrpc":"2.0","id":2,"method":"tools/list"}'))
+    assert "result" in reply
+    assert "Authorization" not in FakeRemote.seen[0]
+
+
+def test_discovery_mode_rejects_tool_calls(anonymous):
+    with pytest.raises(Exception, match="TAPETIDE_TOKEN is not set"):
+        anonymous.forward('{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"x"}}')
