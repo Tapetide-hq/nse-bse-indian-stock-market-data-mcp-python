@@ -7,7 +7,7 @@
 <h1 align="center">Indian Stock Market MCP Server for Python — NSE & BSE Data via uvx</h1>
 
 <p align="center">
-  <strong>The official Python package of the Tapetide Indian stock market MCP server: 55 tools to search, screen and analyze all 8,200+ NSE and BSE stocks from Claude, ChatGPT, Cursor, VS Code, Codex, Gemini CLI and any MCP client. Install with <code>uvx</code> or <code>pip</code>.</strong>
+  <strong>The official Python package of the Tapetide Indian stock market MCP server: 48 tools (55 including aliases) to search, screen and analyze about 8,000 NSE and BSE stocks from Claude, ChatGPT, Cursor, VS Code, Codex, Gemini CLI and any MCP client. Install with <code>uvx</code> or <code>pip</code>.</strong>
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
   <a href="https://tapetide.com/mcp">Documentation</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#works-with">Client Setup Guides</a> •
-  <a href="#tools">55 Tools</a> •
+  <a href="#tools">48 Tools</a> •
   <a href="#example-prompts">Example Prompts</a> •
   <a href="https://pypi.org/project/tapetide-mcp/">PyPI</a> •
   <a href="https://github.com/Tapetide-hq/nse-bse-indian-stock-market-data-mcp">Node.js version</a>
@@ -42,7 +42,7 @@ This is the Python distribution, for setups that already run Python or `uv` and 
 claude mcp add tapetide -e TAPETIDE_TOKEN=your_token_here -- uvx tapetide-mcp
 ```
 
-**55 tools** · **8,200+ NSE/BSE stocks** · **Python 3.10+, zero dependencies** · **Free tier** · [Setup guides for 16 clients](https://tapetide.com/mcp)
+**48 tools** (55 including aliases) · **about 8,000 NSE/BSE stocks** · **Python 3.10+, zero dependencies** · **Free: 50 tool calls a day** · [Setup guides for 16 clients](https://tapetide.com/mcp)
 
 ## Works with
 
@@ -143,7 +143,7 @@ The package is a lightweight stdio bridge. It:
 - Identifies your MCP client to the remote via `User-Agent`, echoes the negotiated protocol version, and replays the `Mcp-Session-Id`
 - Warns on stderr when the server rate-limits a call
 
-All 55 tools run on the remote server. Because the bridge forwards JSON-RPC verbatim, new tools are available the moment they ship — no package upgrade needed.
+All tools run on the remote server. Because the bridge forwards JSON-RPC verbatim, new tools are available the moment they ship — no package upgrade needed.
 
 ## Authentication
 
@@ -253,7 +253,7 @@ Requires a connected Tapetide account.
 | Tool | Description |
 |------|-------------|
 | `get_user_portfolio` | Holdings with live prices, absolute and % P&L, invested value, weight, sector, market-cap class. |
-| `add_portfolio_stocks` | Add holdings singly or in bulk, including rows parsed from a broker CSV or screenshot (Zerodha, Groww, Angel One, Dhan, Upstox, 5Paisa, ICICI Direct, Kotak, HDFC Sky, Motilal Oswal). Duplicates merge on a weighted-average price. |
+| `add_portfolio_stocks` | Add holdings singly or in bulk, including rows parsed from a broker CSV or screenshot. Duplicates merge on a weighted-average price. |
 | `update_portfolio_stock` | Update quantity and average price after a top-up or partial sell. |
 | `remove_portfolio_stocks` | Remove holdings from the portfolio. |
 
@@ -401,7 +401,7 @@ recover in the same turn — but new integrations should use the replacement dir
 
 | Category | What's included |
 |----------|----------------|
-| **Stocks** | All NSE + BSE listed companies (~8,200 including SME) |
+| **Stocks** | About 8,000 NSE and BSE listed companies, including SME |
 | **Price data** | Daily OHLCV up to 2,000 days + weekly aggregation + delivery % |
 | **Financials** | Quarterly + annual P&L, balance sheet, cash flow, 50+ ratios |
 | **Screener** | 326 fundamental ratios + real-time technical indicators + cross-field comparisons |
