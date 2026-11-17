@@ -42,7 +42,7 @@ This is the Python distribution, for setups that already run Python or `uv` and 
 claude mcp add tapetide -e TAPETIDE_TOKEN=your_token_here -- uvx tapetide-mcp
 ```
 
-**48 tools** (55 including aliases) · **about 8,000 NSE/BSE stocks** · **Python 3.10+, zero dependencies** · **Free: 50 tool calls a day** · [Setup guides for 16 clients](https://tapetide.com/mcp)
+**48 tools** (55 including aliases) · **about 8,000 NSE/BSE stocks** · **Python 3.10+, zero dependencies** · **Free for your first 7 days: 100 tool calls a day** · [Setup guides for 16 clients](https://tapetide.com/mcp)
 
 ## Works with
 
@@ -435,7 +435,8 @@ and this Python bridge) — they follow your plan, not your transport.
 
 | Scope | Free plan | Paid plans |
 |-------|-----------|------------|
-| Per day | 50 tool calls | Per your plan, see [tapetide.com/pricing](https://tapetide.com/pricing) |
+| Per day | 100 tool calls, for the first 7 days after signup | Per your plan, see [tapetide.com/pricing](https://tapetide.com/pricing) |
+| After the first 7 days | Tool calls need a paid plan | No time limit |
 | Per calendar month | No monthly cap | Per your plan (unlimited on enterprise) |
 | Burst | 60 tool calls per minute | 60 tool calls per minute |
 
